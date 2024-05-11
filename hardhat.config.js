@@ -24,6 +24,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.8",
   networks: {
+    sepolia: {
+      url: process.env.SEPOLIA_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts:
@@ -36,5 +41,14 @@ module.exports = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
+      11155111: 1,
+    },
+    user: {
+      default: 1,
+    },
   },
 };
