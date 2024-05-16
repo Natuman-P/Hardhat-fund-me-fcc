@@ -16,6 +16,7 @@
 // const networkConfig = helperConfig.networkConfig
 // (b) else:
 const {networkConfig} = require("../helper-hardhat-config")
+const {network} = require("hardhat")
 
 // (a) else (best way): 
 module.exports = async ({ getNamedAccounts, deployments }) => {
