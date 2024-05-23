@@ -1,4 +1,3 @@
-
 // (a) you can use this:
 // async function deployFunc(hre) {
 //     console.log("Hi!")
@@ -15,20 +14,20 @@
 // (b) or:
 // const networkConfig = helperConfig.networkConfig
 // (b) else (best way):
-const {networkConfig, developmentChains} = require("../helper-hardhat-config")
-const {network} = require("hardhat")
+const { networkConfig, developmentChains } = require("../helper-hardhat-config")
+const { network } = require("hardhat")
 
-// (a) else (best way): 
+// (a) else (best way):
 module.exports = async ({ getNamedAccounts, deployments }) => {
-    const {deploy, log} = deployments
-    const {deployer} = await getNamedAccounts()
+    const { deploy, log } = deployments
+    const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
 
     // if chainId is X use address Y
     // if chainId is Z use address A
     // const ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
     let ethUsdPriceFeedAddress
-    if(developmentChains.includes(network.name)){
+    if (developmentChains.includes(network.name)) {
         const ethUsdAggregator = await deployments.get("MockV3Aggregator")
         ethUsdPriceFeedAddress = ethUsdAggregator.address
     } else {
@@ -37,12 +36,19 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     // if the contract doesn't exist, we deploy a minimal version of it
     // for our local testing
-    
+
     const fundMe = await deploy("FundMe", {
         from: deployer,
         args: [ethUsdPriceFeedAddress], //price feed address
         log: true,
     })
+
+    if (
+        !developmentChains.includes(network.name) &&
+        process.env.ETHERSCAN_API_KEY
+    ) {
+        
+    }
     log("--------------------------------------------------------")
 }
 module.exports.tags = ["all", "mocks"]
